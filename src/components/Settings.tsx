@@ -60,12 +60,12 @@ export function Settings() {
           user_id: user!.id,
           default_currency: 'CAD',
           theme: 'light',
-          exchange_rate_cad_to_inr: 61.5,
+          exchange_rate_cad_to_inr: 61.5, // Ensure this is a number, not string
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }
-        await blink.db.user_preferences.create(defaultPrefs)
-        setPreferences(defaultPrefs)
+        const created = await blink.db.user_preferences.create(defaultPrefs)
+        setPreferences(created)
       }
     } catch (error) {
       console.error('Error loading preferences:', error)
@@ -119,7 +119,7 @@ export function Settings() {
 
     setIsUpdatingRate(true)
     try {
-      await updatePreferences({ exchange_rate_cad_to_inr: rate })
+      await updatePreferences({ exchange_rate_cad_to_inr: rate }) // Pass as number
       toast({
         description: "Exchange rate updated successfully!"
       })
