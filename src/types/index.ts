@@ -1,65 +1,65 @@
 export interface Transaction {
   id: string
-  userId: string
+  user_id: string
   type: 'income' | 'expense'
   category: string
-  amountCad: number
-  amountInr: number
-  exchangeRate: number
+  amount_cad: number
+  amount_inr: number
+  exchange_rate: number
   description: string
   date: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Debt {
   id: string
-  userId: string
+  user_id: string
   type: 'owe' | 'lent'
-  personName: string
-  totalAmountCad: number
-  totalAmountInr: number
-  remainingAmountCad: number
-  remainingAmountInr: number
-  exchangeRate: number
+  person_name: string
+  total_amount_cad: number
+  total_amount_inr: number
+  remaining_amount_cad: number
+  remaining_amount_inr: number
+  exchange_rate: number
   purpose: string
-  dueDate?: string
-  isPaid: boolean
-  priorityScore: number
-  createdAt: string
-  updatedAt: string
+  due_date?: string
+  is_paid: string
+  priority_score: number
+  created_at: string
+  updated_at: string
 }
 
 export interface DebtPayment {
   id: string
-  debtId: string
-  userId: string
-  amountCad: number
-  amountInr: number
-  exchangeRate: number
-  paymentDate: string
+  debt_id: string
+  user_id: string
+  amount_cad: number
+  amount_inr: number
+  exchange_rate: number
+  payment_date: string
   notes?: string
-  createdAt: string
+  created_at: string
 }
 
 export interface UserPreferences {
   id: string
-  userId: string
-  defaultCurrency: 'CAD' | 'INR'
+  user_id: string
+  default_currency: 'CAD' | 'INR'
   theme: 'light' | 'dark'
-  exchangeRateCadToInr: number
-  createdAt: string
-  updatedAt: string
+  exchange_rate_cad_to_inr: number
+  created_at: string
+  updated_at: string
 }
 
 export interface FamilyAccess {
   id: string
-  ownerUserId: string
-  memberEmail: string
-  accessLevel: 'view'
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
+  owner_user_id: string
+  member_email: string
+  access_level: 'view'
+  is_active: string
+  created_at: string
+  updated_at: string
 }
 
 export const TRANSACTION_CATEGORIES = {

@@ -10,10 +10,11 @@ import { Badge } from './ui/badge'
 import { blink } from '../blink/client'
 import { useAuth } from '../contexts/AuthContext'
 import { TRANSACTION_CATEGORIES } from '../types'
-import { toast } from 'react-hot-toast'
+import { useToast } from '../hooks/use-toast'
 
 export function AddTransaction() {
   const { user } = useAuth()
+  const { toast } = useToast()
   const [type, setType] = useState<'income' | 'expense'>('expense')
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
@@ -26,13 +27,19 @@ export function AddTransaction() {
     e.preventDefault()
     
     if (!amount || !category || !description || !user?.id) {
-      toast.error('Please fill in all fields')
+      toast({
+        variant: "destructive",
+        description: "Please fill in all fields"
+      })
       return
     }
 
     const amountCad = parseFloat(amount)
     if (isNaN(amountCad) || amountCad <= 0) {
-      toast.error('Please enter a valid amount')
+      toast({
+        variant: "destructive",
+        description: "Please enter a valid amount"
+      })
       return
     }
 
@@ -40,19 +47,22 @@ export function AddTransaction() {
       setLoading(true)
       
       const transaction = {
-        userId: user.id,
+        id: `transaction_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        user_id: user.id,
         type,
         category,
-        amountCad,
-        amountInr: amountCad * exchangeRate,
-        exchangeRate,
+        amount_cad: amountCad,
+        amount_inr: amountCad * exchangeRate,
+        exchange_rate: exchangeRate,
         description,
         date
       }
 
       await blink.db.transactions.create(transaction)
       
-      toast.success(`${type === 'income' ? 'Income' : 'Expense'} added successfully!`)
+      toast({
+        description: `${type === 'income' ? 'Income' : 'Expense'} added successfully!`
+      })
       
       // Reset form
       setAmount('')
@@ -62,7 +72,10 @@ export function AddTransaction() {
       
     } catch (error) {
       console.error('Error adding transaction:', error)
-      toast.error('Failed to add transaction')
+      toast({
+        variant: "destructive",
+        description: "Failed to add transaction"
+      })
     } finally {
       setLoading(false)
     }

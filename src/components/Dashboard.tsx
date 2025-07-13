@@ -39,18 +39,18 @@ export function Dashboard({ onPageChange }: DashboardProps) {
       
       // Load recent transactions
       const recentTransactions = await blink.db.transactions.list({
-        where: { userId: user!.id },
-        orderBy: { createdAt: 'desc' },
+        where: { user_id: user!.id },
+        orderBy: { created_at: 'desc' },
         limit: 5
       })
       
       // Load active debts - corrected query structure
       const activeDebts = await blink.db.debts.list({
         where: { 
-          userId: user!.id,
-          isPaid: "0"  // SQLite boolean as string "0" for false
+          user_id: user!.id,
+          is_paid: "0"  // SQLite boolean as string "0" for false
         },
-        orderBy: { dueDate: 'asc' },
+        orderBy: { due_date: 'asc' },
         limit: 5
       })
 
@@ -69,19 +69,19 @@ export function Dashboard({ onPageChange }: DashboardProps) {
   
   const monthlyIncome = monthlyTransactions
     .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amountCad, 0)
+    .reduce((sum, t) => sum + t.amount_cad, 0)
     
   const monthlyExpenses = monthlyTransactions
     .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amountCad, 0)
+    .reduce((sum, t) => sum + t.amount_cad, 0)
 
   const totalOwed = debts
-    .filter(d => d.type === 'owe' && Number(d.isPaid) === 0)
-    .reduce((sum, d) => sum + d.remainingAmountCad, 0)
+    .filter(d => d.type === 'owe' && Number(d.is_paid) === 0)
+    .reduce((sum, d) => sum + d.remaining_amount_cad, 0)
     
   const totalLent = debts
-    .filter(d => d.type === 'lent' && Number(d.isPaid) === 0)
-    .reduce((sum, d) => sum + d.remainingAmountCad, 0)
+    .filter(d => d.type === 'lent' && Number(d.is_paid) === 0)
+    .reduce((sum, d) => sum + d.remaining_amount_cad, 0)
 
   const formatCurrency = (amount: number, currency: 'CAD' | 'INR' = 'CAD') => {
     if (currency === 'CAD') {
@@ -245,10 +245,10 @@ export function Dashboard({ onPageChange }: DashboardProps) {
                       <p className={`text-sm font-medium ${
                         transaction.type === 'income' ? 'text-emerald-600' : 'text-red-600'
                       }`}>
-                        {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amountCad)}
+                        {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount_cad)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {formatCurrency(transaction.amountCad, 'INR')}
+                        {formatCurrency(transaction.amount_cad, 'INR')}
                       </p>
                     </div>
                   </div>
@@ -293,11 +293,11 @@ export function Dashboard({ onPageChange }: DashboardProps) {
                       }`} />
                       <div>
                         <p className="text-sm font-medium">
-                          {debt.type === 'owe' ? 'Owe to' : 'Lent to'} {debt.personName}
+                          {debt.type === 'owe' ? 'Owe to' : 'Lent to'} {debt.person_name}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {debt.purpose}
-                          {debt.dueDate && ` • Due ${new Date(debt.dueDate).toLocaleDateString()}`}
+                          {debt.due_date && ` • Due ${new Date(debt.due_date).toLocaleDateString()}`}
                         </p>
                       </div>
                     </div>
@@ -305,10 +305,10 @@ export function Dashboard({ onPageChange }: DashboardProps) {
                       <p className={`text-sm font-medium ${
                         debt.type === 'owe' ? 'text-orange-600' : 'text-blue-600'
                       }`}>
-                        {formatCurrency(debt.remainingAmountCad)}
+                        {formatCurrency(debt.remaining_amount_cad)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {formatCurrency(debt.remainingAmountCad, 'INR')}
+                        {formatCurrency(debt.remaining_amount_cad, 'INR')}
                       </p>
                     </div>
                   </div>
