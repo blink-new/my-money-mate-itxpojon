@@ -44,11 +44,11 @@ export function Dashboard({ onPageChange }: DashboardProps) {
         limit: 5
       })
       
-      // Load active debts - fix the query syntax
+      // Load active debts - corrected query structure
       const activeDebts = await blink.db.debts.list({
         where: { 
           userId: user!.id,
-          isPaid: "0"  // SQLite boolean as string
+          isPaid: "0"  // SQLite boolean as string "0" for false
         },
         orderBy: { dueDate: 'asc' },
         limit: 5
@@ -76,11 +76,11 @@ export function Dashboard({ onPageChange }: DashboardProps) {
     .reduce((sum, t) => sum + t.amountCad, 0)
 
   const totalOwed = debts
-    .filter(d => d.type === 'owe')
+    .filter(d => d.type === 'owe' && Number(d.isPaid) === 0)
     .reduce((sum, d) => sum + d.remainingAmountCad, 0)
     
   const totalLent = debts
-    .filter(d => d.type === 'lent')
+    .filter(d => d.type === 'lent' && Number(d.isPaid) === 0)
     .reduce((sum, d) => sum + d.remainingAmountCad, 0)
 
   const formatCurrency = (amount: number, currency: 'CAD' | 'INR' = 'CAD') => {
