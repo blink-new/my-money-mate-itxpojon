@@ -4,6 +4,11 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { Layout } from './components/Layout'
 import { Dashboard } from './components/Dashboard'
 import { AddTransaction } from './components/AddTransaction'
+import { TransactionHistory } from './components/TransactionHistory'
+import { DebtManager } from './components/DebtManager'
+import { Analytics } from './components/Analytics'
+import { Settings as SettingsComponent } from './components/Settings'
+import { FamilyAccess } from './components/FamilyAccess'
 import { PlaceholderPage } from './components/PlaceholderPage'
 import { Button } from './components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
@@ -93,45 +98,15 @@ function AppContent() {
       case 'add-transaction':
         return <AddTransaction />
       case 'history':
-        return (
-          <PlaceholderPage
-            title="Transaction History"
-            description="View, filter, and search through all your financial transactions with advanced filtering options and export capabilities."
-            icon={<History className="w-8 h-8 text-primary" />}
-          />
-        )
+        return <TransactionHistory />
       case 'debts':
-        return (
-          <PlaceholderPage
-            title="Debt Manager"
-            description="Track money you owe and lent with smart prioritization, partial payment tracking, and due date reminders."
-            icon={<CreditCard className="w-8 h-8 text-primary" />}
-          />
-        )
+        return <DebtManager />
       case 'analytics':
-        return (
-          <PlaceholderPage
-            title="Financial Analytics"
-            description="Visualize your spending patterns, income trends, and financial health with interactive charts and insights."
-            icon={<BarChart3 className="w-8 h-8 text-primary" />}
-          />
-        )
+        return <Analytics />
       case 'family':
-        return (
-          <PlaceholderPage
-            title="Family Access"
-            description="Share view-only access to your financial data with family members and manage permissions securely."
-            icon={<Users className="w-8 h-8 text-primary" />}
-          />
-        )
+        return <FamilyAccess />
       case 'settings':
-        return (
-          <PlaceholderPage
-            title="Settings"
-            description="Customize your preferences, manage exchange rates, themes, export data, and account settings."
-            icon={<Settings className="w-8 h-8 text-primary" />}
-          />
-        )
+        return <SettingsComponent />
       default:
         return <Dashboard onPageChange={setCurrentPage} />
     }

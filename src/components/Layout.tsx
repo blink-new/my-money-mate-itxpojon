@@ -42,9 +42,9 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar - Desktop */}
-      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0">
+    <div className="min-h-screen bg-background">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 lg:z-50">
         <div className="flex flex-col flex-grow bg-card border-r overflow-y-auto">
           {/* Logo */}
           <div className="flex items-center h-16 px-6 border-b">
@@ -68,7 +68,7 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                 <button
                   key={item.id}
                   onClick={() => onPageChange(item.id)}
-                  className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                  className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${ 
                     isActive
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
@@ -109,9 +109,10 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
         </div>
       </div>
 
-      {/* Mobile header */}
+      {/* Mobile Layout */}
       <div className="lg:hidden">
-        <div className="flex items-center justify-between h-16 px-4 bg-card border-b">
+        {/* Mobile header */}
+        <div className="sticky top-0 z-40 flex items-center justify-between h-16 px-4 bg-card border-b">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Wallet className="w-5 h-5 text-primary-foreground" />
@@ -136,11 +137,11 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
           </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu overlay */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 z-50">
             <div className="fixed inset-0 bg-black/20" onClick={() => setIsMobileMenuOpen(false)} />
-            <div className="fixed top-0 right-0 bottom-0 w-full max-w-xs bg-card border-l">
+            <div className="fixed top-0 right-0 bottom-0 w-full max-w-xs bg-card border-l shadow-lg">
               <div className="flex items-center justify-between h-16 px-4 border-b">
                 <h2 className="text-lg font-semibold">Navigation</h2>
                 <Button
@@ -151,7 +152,7 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              <nav className="flex-1 px-4 py-6 space-y-1">
+              <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                 {navigation.map((item) => {
                   const Icon = item.icon
                   const isActive = currentPage === item.id
@@ -162,7 +163,7 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                         onPageChange(item.id)
                         setIsMobileMenuOpen(false)
                       }}
-                      className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                      className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
                         isActive
                           ? 'bg-primary text-primary-foreground'
                           : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
@@ -175,9 +176,24 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                 })}
               </nav>
               <div className="p-4 border-t">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                    <span className="text-sm font-medium text-accent-foreground">
+                      {user?.email?.[0]?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {user?.displayName || user?.email}
+                    </p>
+                  </div>
+                </div>
                 <Button
                   variant="outline"
-                  onClick={logout}
+                  onClick={() => {
+                    logout()
+                    setIsMobileMenuOpen(false)
+                  }}
                   className="w-full"
                 >
                   Logout
@@ -189,12 +205,13 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 lg:pl-72">
-        <div className="flex items-center justify-between h-16 px-4 lg:px-6 bg-background border-b lg:border-0">
-          <h2 className="text-lg font-semibold text-foreground capitalize hidden lg:block">
+      <div className="lg:pl-72">
+        {/* Desktop header */}
+        <div className="hidden lg:flex items-center justify-between h-16 px-6 bg-background border-b">
+          <h2 className="text-lg font-semibold text-foreground capitalize">
             {navigation.find(nav => nav.id === currentPage)?.name || 'Dashboard'}
           </h2>
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
@@ -204,7 +221,9 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
             </Button>
           </div>
         </div>
-        <main className="flex-1 p-4 lg:p-6">
+        
+        {/* Page content */}
+        <main className="p-4 lg:p-6">
           {children}
         </main>
       </div>
