@@ -44,13 +44,11 @@ export function Dashboard({ onPageChange }: DashboardProps) {
         limit: 5
       })
       
-      // Load active debts
+      // Load active debts - fix the query syntax
       const activeDebts = await blink.db.debts.list({
         where: { 
-          AND: [
-            { userId: user!.id },
-            { isPaid: "0" }
-          ]
+          userId: user!.id,
+          isPaid: "0"  // SQLite boolean as string
         },
         orderBy: { dueDate: 'asc' },
         limit: 5
