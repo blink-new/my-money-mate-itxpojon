@@ -55,7 +55,9 @@ export function AddTransaction() {
         amount_inr: amountCad * exchangeRate,
         exchange_rate: exchangeRate,
         description,
-        date
+        date,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
 
       await blink.db.transactions.create(transaction)
